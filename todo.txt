@@ -1,0 +1,6 @@
+TODO list:
+
+- To Loger: option for BIG numbers- to separate thousands, millions with space
+- Unit tests for RingBuffers
+- Update unit test for slot-signal: add test for multiply connecting the same signal 
+- Update README (Log::Once available)
