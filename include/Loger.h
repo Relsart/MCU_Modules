@@ -5,10 +5,8 @@
 
 #ifdef WITH_ETL
 #include "etl/delegate.h"
-#define funct etl::delegate
 #else
 #include <functional>
-#define functe std::function
 #endif
 
 /**
@@ -24,24 +22,30 @@ enum LogLevel
 class Log 
 {
 public:
+    #ifdef WITH_ETL
     /**
      * @brief Callback for sending data (to UART for example..)
      * @param [in] Data
      * @param [in] Size (in bytes)
      */
-    using DataSender = funct<void(void*, uint32_t)>;
+    using DataSender = etl::delegate<void(void*, uint32_t)>;
 
     /**
      * @brief Callback for waiting port to be free
      * @param [in] Timeout (in milliseconds)
      * @return True- is Free; False- Unavailable 
      */
-    using IsPortAvailable = funct<bool(uint32_t)>;
+    using IsPortAvailable = etl::delegate<bool(uint32_t)>;
 
     /**
      * @brief Callback for system time getting
      */
-    using GetSysTime = funct<uint64_t(void)>;
+    using GetSysTime = etl::delegate<uint64_t(void)>;
+    #else
+    using DataSender = std::function<void(void*, uint32_t)>;
+    using IsPortAvailable = std::function<bool(uint32_t)>;
+    using GetSysTime = std::function<uint64_t(void)>;
+    #endif
 
     /**
      * @brief Notation modifier: for output integer values in hex or decimal
@@ -95,7 +99,7 @@ private:
     static GetSysTime m_getSysTimeMs;           // System timer (in milliseconds) getter
     static char* line;                          // String-buffer
     static const uint32_t m_BufferMaxSize;      // Full size of output buffer
-    static bool buisy;                          // Log buisy flag
+    static bool busy;                           // Log busy flag
     static bool logEnable;                      // Logging enable (common flags for all grupped logs)
     bool m_thisLogEnable = false;               // This log enabled (groups/level checked)
     static uint32_t failcounter;                // Counter of missed (not sended) messages (for debug diagnostic)

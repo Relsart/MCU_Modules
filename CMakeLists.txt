@@ -9,3 +9,7 @@ if (NOT WITH_RTOS)
 endif()
 
 add_library(modules STATIC ${srcDir})
+
+if(WITH_RTOS)
+target_link_libraries(modules task) # For Tasks descriptors storage (supposed to be in src/task)
+endif()

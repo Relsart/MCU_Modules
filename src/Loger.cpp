@@ -43,7 +43,7 @@ Log::IsPortAvailable Log::m_portIsBusy;
 Log::GetSysTime Log::m_getSysTimeMs;
 
 char* Log::line = nullptr;
-bool Log::buisy = false;
+bool Log::busy = false;
 uint32_t Log::failcounter = 0;
 const uint32_t Log::m_BufferMaxSize = sizeof(outstring);
 bool Log::logEnable = true;
@@ -65,7 +65,7 @@ void Log::putIntToBuffer(Type val, bool isSigned)
     {
         str[0] = '0';   // Add hex preamble
         str[1] = 'x';
-        size = sprintf(&str[2], "%X", val) + 2; // + hex preamble size
+        size = sprintf(&str[2], "%02X", val) + 2; // + hex preamble size
     }
     
     if (size > (m_BufferMaxSize - m_buffEndIndex))
@@ -120,7 +120,7 @@ Log::Log()
 
     m_thisLogEnable = true;
     m_buffEndIndex = 0;
-    buisy = true;
+    busy = true;
     putStringToBuffer(Log::Color::Default);
 }
 
@@ -134,7 +134,7 @@ Log::Log(LogGroup module, LogLevel level)
 
     m_thisLogEnable = true;
     m_buffEndIndex = 0;
-    buisy = true;
+    busy = true;
 
     putStringToBuffer(endl); // Begin from newline
     switch (level)
@@ -161,7 +161,7 @@ Log::Log(LogGroup module, LogLevel level)
 
 bool Log::checkLogAvailable()
 {
-    if (buisy)
+    if (busy)
     {
         failcounter++;
         return false;
@@ -221,12 +221,12 @@ Log::~Log()
     if (m_sender && line && m_thisLogEnable)
         m_sender(line, m_buffEndIndex);    // Send string to stream
     m_buffEndIndex = 0;
-    buisy = false;   // Release log
+    busy = false;   // Release log
 }
 
 Log& Log::operator<<(const char* str)
 {
-    if (!str || !buisy || !m_thisLogEnable)
+    if (!str || !busy || !m_thisLogEnable)
         return *this;
 
     putStringToBuffer(str);
@@ -235,7 +235,7 @@ Log& Log::operator<<(const char* str)
 
 Log& Log::operator<<(char ch)
 {
-    if (!buisy || !m_thisLogEnable || (m_buffEndIndex == m_BufferMaxSize))
+    if (!busy || !m_thisLogEnable || (m_buffEndIndex == m_BufferMaxSize))
         return *this;
 
     memcpy(&line[m_buffEndIndex], &ch, 1);

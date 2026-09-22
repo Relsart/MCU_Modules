@@ -69,4 +69,4 @@ public:
     void run (RingBuffer* buffer, uint32_t quantity) override;
 };
 
-}   // namespace console cg XEEN HAr VAt jA2
+}   // namespace console
