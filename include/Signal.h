@@ -4,6 +4,7 @@
 #include "SignalInterface.h"
 #ifndef WITH_RTOS
 #include "../nonRtos/LoopSignals.h"
+#include "../nonRtos/SwTimer.h"
 #endif
 
 /**
