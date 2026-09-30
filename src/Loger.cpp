@@ -90,7 +90,7 @@ void Log::putInt64ToBuffer(Type val, bool isSigned)
     {
         str[0] = '0';   // Add hex preamble
         str[1] = 'x';
-        size = conversions::UintToString(val, str, 16, true) + 2; // + hex preamble size
+        size = conversions::UintToString(val, &str[2], 16, true) + 2; // + hex preamble size
     }
     
     if (size > (m_BufferMaxSize - m_buffEndIndex))
