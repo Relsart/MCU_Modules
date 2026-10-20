@@ -18,11 +18,10 @@ Terminal& Terminal::getInstance ()
     return self;
 }
 
-void Terminal::run (RingBuffer* incomingData, uint32_t)
+void Terminal::run (i_face::I_RingBuffer* incomingData, uint32_t)
 {
     #ifdef WITH_RTOS
     /* --------------- I S R --------------- */
-
     if (incomingData && m_newDataQueue)
     {
         BaseType_t xHigherPriorityTaskWoken = pdFALSE;
@@ -36,11 +35,14 @@ void Terminal::run (RingBuffer* incomingData, uint32_t)
     #endif
 }
 
-void Terminal::read(RingBuffer* incomingData)
+void Terminal::read(i_face::I_RingBuffer* incomingData)
 {
+    if (!incomingData)
+        return;
+
     uint8_t data;
     /* Read incoming data from the ring buffer */
-    while (incomingData->read(data))
+    while (incomingData->pop(data))
     {
         switch (data)
         {

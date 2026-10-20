@@ -1,5 +1,5 @@
 #pragma once
-#include "RingBuffer.h"
+#include "Interface.h"
 #include "Signal.h"
 #include "TermCmdInterface.h"
 #include "terminal/TerminalInit.h"
@@ -20,7 +20,7 @@
  */
 namespace console {
 
-class Terminal : public SlotInterface <RingBuffer*>
+class Terminal : public SlotInterface <i_face::I_RingBuffer*>
 {
 private:
     /**
@@ -48,7 +48,7 @@ private:
     /**
      * @brief Working with terminal command line:
      */
-    void read(RingBuffer* buffer);
+    void read(i_face::I_RingBuffer* buffer);
     void parse();          // Parsing and handling input string (after 'Enter' was sent)
     void setArguments();   // Setting command line arguments
 
@@ -66,7 +66,7 @@ public:
     /**
      * @brief Handle data from UART
      */
-    void run (RingBuffer* buffer, uint32_t quantity) override;
+    void run (i_face::I_RingBuffer* buffer, uint32_t) override;
 };
 
 }   // namespace console
