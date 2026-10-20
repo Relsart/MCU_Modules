@@ -1,7 +1,7 @@
 #pragma once
 #include <stdint.h>
 #include "Signal.h"
-#include "driver/Interface.h"
+#include "Interface.h"
 
 /**
  * @brief Software timer
