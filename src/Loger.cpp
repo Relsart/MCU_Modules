@@ -77,20 +77,20 @@ void Log::putIntToBuffer(Type val, bool isSigned)
 template <typename Type>
 void Log::putInt64ToBuffer(Type val, bool isSigned)
 {
-    char str[50]{0};
+    char str[66]{0};
     int size = 0;
     if (intBase == Base::Dec)
     {
         if (isSigned)
-            size = conversions::IntToString(val, str, 10, true);
+            size = conversions::IntToString(val, str, sizeof(str), 10, true);
         else
-            size = conversions::UintToString(val, str, 10, true);
+            size = conversions::UintToString(val, str, sizeof(str), 10, true);
     }
     else
     {
         str[0] = '0';   // Add hex preamble
         str[1] = 'x';
-        size = conversions::UintToString(val, &str[2], 16, true) + 2; // + hex preamble size
+        size = conversions::UintToString(val, &str[2], (sizeof(str) - 2), 16, true) + 2; // + hex preamble size
     }
     
     if (size > (m_BufferMaxSize - m_buffEndIndex))
@@ -103,10 +103,7 @@ template <typename Type>
 void Log::putRealToBuffer(Type val)
 {
     char str[50]{0};
-    //int size = sprintf(str, "%.*f", floatPrecision, val);
-    // ACHTUNG: sprintf can not working correctly with STM32 MCUs, so use the custom solution:
-    int size = conversions::FloatToString(val, str, floatPrecision);
-
+    uint32_t size = conversions::FloatToString(val, str, sizeof(str), m_floatPrecision, false);
     if (size > (m_BufferMaxSize - m_buffEndIndex))
         size = m_BufferMaxSize - m_buffEndIndex;   // full message doesn't fit in a line
     memcpy(&line[m_buffEndIndex], str, size);
@@ -156,7 +153,7 @@ Log::Log(LogGroup module, LogLevel level)
     }
     putStringToBuffer(moduleNames[module]);
     intBase = Base::Dec;
-    floatPrecision = 3;
+    m_floatPrecision = 3;
 }
 
 bool Log::checkLogAvailable()
@@ -330,7 +327,7 @@ Log& Log::operator<<(Base basemod)
 Log& Log::operator<<(Precision prec)
 {
     if (!m_thisLogEnable) return *this;
-    floatPrecision = prec.value;
+    m_floatPrecision = prec.value;
     return *this;
 }
 
