@@ -7,7 +7,7 @@ namespace console {
 Terminal::Terminal()
 {
     #ifdef WITH_RTOS
-    m_newDataQueue = xQueueCreate(1, sizeof(RingBuffer*));
+    m_newDataQueue = xQueueCreate(1, sizeof(i_face::I_RingBuffer*));
     xTaskCreate(handleTask, "Terminal", task::StackSizes[task::Tasks::Terminal], this, task::TerminalTaskPriority, &task::tasksHandlers[task::Tasks::Terminal]);
     #endif
 }
@@ -93,7 +93,7 @@ void Terminal::parse ()
         }
     }
     // Checking command name and invoking the appropriate command:
-    if (strcmp (commandName, "help") == 0)
+    if (strncmp(commandName, "help", m_BufferSize) == 0)
     {
         // TODO: make help
     }
@@ -101,7 +101,7 @@ void Terminal::parse ()
     {
         for (uint32_t i = 0; i < sizeof (listCmd)/sizeof (listCmd[0]); ++i)
         {
-            if (strcmp (listCmd[i]->getName(), commandName) == 0)
+            if (strncmp(listCmd[i]->getName(), commandName, m_BufferSize) == 0)
             {
                 Log::disable();
                 setArguments();
@@ -138,7 +138,7 @@ void Terminal::handleTask(void* pvParameters)
     Terminal* instance = static_cast<Terminal*>(pvParameters);
     if (instance)
     {
-        RingBuffer* rxBufferPtr;
+        i_face::I_RingBuffer* rxBufferPtr;
         for (;;)
         {
             xQueueReceive(instance->m_newDataQueue, &rxBufferPtr, portMAX_DELAY);

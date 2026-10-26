@@ -95,7 +95,7 @@ private:
     };
 
     static DataSender m_sender;                 // Data sender function (to UART)
-    static IsPortAvailable m_portIsBusy;       // Function for checking (and waiting) if target receiver is free
+    static IsPortAvailable m_portIsBusy;        // Function for checking (and waiting) if target receiver is free
     static GetSysTime m_getSysTimeMs;           // System timer (in milliseconds) getter
     static char* line;                          // String-buffer
     static const uint32_t m_BufferMaxSize;      // Full size of output buffer
@@ -110,8 +110,8 @@ private:
     static uint8_t maskModule[lmEnd/bitsInByte+1];  // Bitmask for log modules masking
 
     uint32_t m_buffEndIndex = 0;    // Currrent message size (index of first free byte)
-    Base intBase;
-    uint8_t floatPrecision;
+    Base intBase;                   // Value base: dec or hex
+    uint8_t m_floatPrecision;       // Number of digits after '.'
     uint64_t m_onceHash = 0;        // Hash sum for Once spec
     uint32_t m_onceTimeSetMs;       // Once Spec time interval set in milliseconds
 

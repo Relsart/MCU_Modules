@@ -1,41 +1,46 @@
 #pragma once
 #include <stdint.h>
+#include <cstddef>
 
 namespace conversions
 {
 
 /**
- * @brief Some conversion functions
- * @details Standard functions (such as sprintf) may failed working with uint64_t values, so using this:
+ * @brief Conversion functions
+ * @version Edited on 25.10.2026
  */
 
 /**
  * @brief Float to string
  * @param [in] var Floating value
  * @param [out] str Saving string
- * @param [in] precision Precision
- * @return Symbols count (without /0)
+ * @param [in] maxLen Limit of output string length
+ * @param [in] precision Number of digits after '.'
+ * @param [in] terminator Put the '\n' at the end
+ * @return Result symbols count (without /0)
  */
-uint32_t FloatToString(float var, char* str, uint8_t precision = 3);
+uint32_t FloatToString(float val, char *outstr, size_t maxLen, uint8_t precision, bool terminator = true);
 
 /**
  * @brief Unsigned long long to string
  * @param [in] var Value
  * @param [out] str Saving string
- * @param [in] base May be 2, 8, 10 or 16
- * @param [in] terminator Is needed /0 at the end?
- * @return Symbols count (without /0)
+ * @param [in] maxLen Limit of output string length
+ * @param [in] base Radix, base of the number system (2 for binary, 10 for dec, 16 for hex)
+ * @param [in] terminator Put the '\n' at the end
+ * @return Result symbols count (without /0)
  */
-uint32_t UintToString(uint64_t var, char* str, uint8_t base = 10, bool terminator = true);
+uint32_t UintToString(uint64_t var, char* outstr, size_t maxLen, uint8_t base = 10, bool terminator = true);
 
 /**
  * @brief Signed long long to string
  * @param [in] var Value
  * @param [out] str Saving string
- * @param [in] base May be 2, 8, 10 or 16
- * @param [in] terminator Is needed /0 at the end?
- * @return Symbols count (without /0)
+ * @param [in] maxLen Limit of output string length
+ * @param [in] base Radix, base of the number system (2 for binary, 10 for dec, 16 for hex)
+ * @param [in] terminator Put the '\n' at the end
+ * @return Result symbols count (without /0)
  */
-uint32_t IntToString(int64_t var, char* str, uint8_t base = 10, bool terminator = true);
+uint32_t IntToString(int64_t var, char* outstr, size_t maxLen, uint8_t base = 10, bool terminator = true);
 
 }   // namespace conversions
